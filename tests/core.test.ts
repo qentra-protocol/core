@@ -57,6 +57,29 @@ test('record import reproduces mappings and rejects corrupted evidence fields', 
   await assert.rejects(() => validateRecord({ ...r, sourceMode: 'quantum' }), /source/);
   await assert.rejects(() => validateRecord({ ...r, events: [] }), /lifecycle/);
 });
+test('record validation snapshots caller data before asynchronous checks', async () => {
+  const caller = await record();
+  caller.mapping = await mapOutput(seed, { kind: 'shuffle', items: ['Amber', 'Birch', 'Cedar'] });
+  const expected = structuredClone(caller);
+  const pending = validateRecord(caller);
+  assert.deepEqual(caller, expected);
+  caller.id = 'invalid identity!';
+  (caller as unknown as { sourceMode: string }).sourceMode = 'quantum';
+  caller.input.bytes = 16;
+  caller.events[0]!.state = 'caller-mutated';
+  caller.mapping.config = { kind: 'shuffle', items: ['changed'] };
+  (caller.mapping.result as string[])[0] = 'changed';
+  const validated = await pending;
+  assert.deepEqual(validated, expected);
+  assert.deepEqual(await validateRecord(validated), expected);
+  assert.equal(caller.id, 'invalid identity!');
+  assert.equal(caller.sourceMode as string, 'quantum');
+  caller.input.bytes = 4096;
+  caller.events.length = 0;
+  caller.mapping.config.items.push('later');
+  (caller.mapping.result as string[]).push('later');
+  assert.deepEqual(validated, expected);
+});
 test('memory repository isolates stored and retrieved objects', async () => {
   const repository = new MemoryRepository(); const r = await record();
   await repository.put(r); r.events.push({ at: r.updatedAt, state: 'changed' });
