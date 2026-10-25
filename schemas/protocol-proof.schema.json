@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fulfilled Qentra protocol proof",
+  "type": "object",
+  "required": [
+    "id",
+    "network",
+    "contract",
+    "sequence",
+    "createdAt",
+    "requester",
+    "recipient",
+    "requestAddress",
+    "callbackProgram",
+    "callbackAccount",
+    "feePaid",
+    "feeQuoted",
+    "inputDigest",
+    "userContribution",
+    "providerCommitment",
+    "providerContribution",
+    "outputBytes",
+    "schemaVersion",
+    "state",
+    "numHashes",
+    "paymentVerified",
+    "verification",
+    "delivery",
+    "input",
+    "mapping"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "network": {
+      "type": "string"
+    },
+    "contract": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "requester": {
+      "type": "string"
+    },
+    "recipient": {
+      "type": "string"
+    },
+    "requestAddress": {
+      "type": "string"
+    },
+    "callbackProgram": {
+      "type": "string"
+    },
+    "callbackAccount": {
+      "type": "string"
+    },
+    "feePaid": {
+      "type": "string"
+    },
+    "feeQuoted": {
+      "type": "string"
+    },
+    "inputDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "userContribution": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "providerCommitment": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "providerContribution": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "outputBytes": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "schemaVersion": {
+      "const": 4
+    },
+    "state": {
+      "const": "fulfilled"
+    },
+    "numHashes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 256
+    },
+    "paymentVerified": {
+      "type": "boolean"
+    },
+    "verification": {
+      "enum": [
+        "pending",
+        "verified"
+      ]
+    },
+    "delivery": {
+      "enum": [
+        "not-requested",
+        "pending",
+        "delivered",
+        "failed"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "bytes",
+        "mapping"
+      ],
+      "properties": {
+        "bytes": {
+          "const": 32
+        },
+        "mapping": {
+          "type": "object"
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "required": [
+        "version",
+        "config",
+        "result"
+      ],
+      "properties": {
+        "version": {
+          "const": "qentra-sha256-v1"
+        },
+        "config": {
+          "type": "object"
+        },
+        "result": {
+          "type": [
+            "number",
+            "string",
+            "array"
+          ]
+        }
+      }
+    }
+  }
+}

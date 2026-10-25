@@ -1,0 +1,48 @@
+{
+  "name": "@qentra/core",
+  "version": "0.2.0-dev.0",
+  "private": true,
+  "type": "module",
+  "description": "Qentra Protocol shared proof verification, reproducible randomness mappings and request records",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./proof": {
+      "types": "./dist/proof.d.ts",
+      "import": "./dist/proof.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "schemas",
+    "README.md",
+    "docs",
+    "examples/verify-proof.mjs"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.verify.json",
+    "test": "tsx --test tests/*.test.ts",
+    "example": "tsx examples/verify-record.ts",
+    "check": "npm run typecheck && npm test && npm run example && npm run build"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "tsx": "4.20.6",
+    "@types/node": "22.18.6"
+  },
+  "dependencies": {
+    "idb-keyval": "6.2.2",
+    "@solana/kit": "8.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qentra-protocol/core.git"
+  }
+}
