@@ -31,7 +31,7 @@ jobs:
           python3 - <<'PY'
           import os,re,json,hashlib,pathlib,urllib.request,tarfile,io
           assert os.environ['GITHUB_REPOSITORY']=='qentra-protocol/core'
-          assert os.environ['REPOSITORY_ID']=='1340077383'
+          assert os.environ['REPOSITORY_ID']=='1433543055'
           sha=os.environ['CANDIDATE']; expected=os.environ['MANIFEST']
           assert re.fullmatch('[0-9a-f]{40}',sha) and (not expected or re.fullmatch('[0-9a-f]{64}',expected))
           req=urllib.request.Request('https://api.github.com/repos/qentra-protocol/core/tarball/'+sha,headers={'Authorization':'Bearer '+os.environ['TOKEN'],'Accept':'application/vnd.github+json'})
@@ -58,7 +58,7 @@ jobs:
           actual=hashlib.sha256(manifest).hexdigest()
           assert not expected or actual==expected,'source manifest mismatch'
           pathlib.Path('snapshot/MANIFEST.json').write_bytes(manifest)
-          pathlib.Path('snapshot/ACQUISITION.json').write_text(json.dumps({'repository_id':1340077383,'candidate':sha,'manifest_sha256':actual,'files':len(entries),'bytes':total,'run_id':os.environ['GITHUB_RUN_ID'],'workflow_sha':os.environ['GITHUB_WORKFLOW_SHA']}))
+          pathlib.Path('snapshot/ACQUISITION.json').write_text(json.dumps({'repository_id':1433543055,'candidate':sha,'manifest_sha256':actual,'files':len(entries),'bytes':total,'run_id':os.environ['GITHUB_RUN_ID'],'workflow_sha':os.environ['GITHUB_WORKFLOW_SHA']}))
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

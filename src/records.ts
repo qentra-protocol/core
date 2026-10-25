@@ -88,8 +88,9 @@ export async function mapOutput(output: string, config: MappingConfig): Promise<
   return { version: 'qentra-sha256-v1', config, result };
 }
 export async function validateRecord(value: unknown): Promise<RequestRecord> {
-  if (!value || typeof value !== 'object') throw new Error('Expected a request record');
-  const r = value as RequestRecord;
+  const snapshot = structuredClone(value);
+  if (!snapshot || typeof snapshot !== 'object') throw new Error('Expected a request record');
+  const r = snapshot as RequestRecord;
   if (r.schemaVersion !== 1 || typeof r.id !== 'string' || !/^[a-zA-Z0-9-]{1,100}$/.test(r.id)) throw new Error('Invalid request identity');
   if (r.adapterId !== 'qentra-browser-v1' || r.sourceMode !== 'browser-cryptographic' || r.verification !== 'not-applicable' || r.delivery !== 'not-requested') throw new Error('Unsupported source or evidence status');
   for (const date of [r.createdAt, r.updatedAt]) if (typeof date !== 'string' || !Number.isFinite(Date.parse(date))) throw new Error('Invalid timestamp');
@@ -102,7 +103,7 @@ export async function validateRecord(value: unknown): Promise<RequestRecord> {
     const mapped = await mapOutput(r.outputBytes, r.mapping.config);
     if (JSON.stringify(mapped.result) !== JSON.stringify(r.mapping.result)) throw new Error('Mapping reproduction failed');
   }
-  return structuredClone(r);
+  return r;
 }
 export class MemoryRepository implements Repository {
   private records = new Map<string, RequestRecord>();
